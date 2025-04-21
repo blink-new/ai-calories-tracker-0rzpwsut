@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Platform } from "react-native";
 import { YStack, XStack, Text, Button, Image, ScrollView, Card, Theme, H2, H4, SizableText, View } from "tamagui";
 import { LinearGradient } from "expo-linear-gradient";
 import { Camera } from "@tamagui/lucide-icons";
@@ -28,6 +29,19 @@ function CircularProgress({ value, max, size = 140, stroke = 14, color = "#34c75
   const circumference = 2 * Math.PI * radius;
   const progress = Math.min(value / max, 1);
   const offset = circumference * (1 - progress);
+
+  // Fallback for web if SVG fails
+  if (Platform.OS === "web" && typeof window === "undefined") {
+    // SSR fallback
+    return (
+      <YStack width={size} height={size} ai="center" jc="center" bg={bg} br={size / 2}>
+        <Text fontWeight="700" fontSize={32} color={color}>
+          {value}
+        </Text>
+        <Text fontSize={14} color="$gray10">/ {max} kcal</Text>
+      </YStack>
+    );
+  }
 
   return (
     <View style={{ width: size, height: size, justifyContent: "center", alignItems: "center" }}>
@@ -87,14 +101,14 @@ export default function HomeScreen() {
             elevation: 4,
           }}
         >
-          <H2 color="white" fontWeight="800" letterSpacing={1.2}>
+          <H2 color="white" fontWeight="800" letterSpacing={1.2} style={{ textShadowColor: "#1e7e34", textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 8 }}>
             AI Calories Tracker
           </H2>
-          <Text color="white" fontSize={16} mt={4} mb={8}>
+          <Text color="white" fontSize={16} mt={4} mb={8} style={{ opacity: 0.92 }}>
             Healthy habits, powered by AI
           </Text>
           <CircularProgress value={totalCalories} max={DAILY_GOAL} />
-          <Text color="white" fontSize={14} mt={8}>
+          <Text color="white" fontSize={14} mt={8} style={{ opacity: 0.85 }}>
             Daily Goal
           </Text>
         </LinearGradient>
@@ -102,7 +116,7 @@ export default function HomeScreen() {
         {/* Meals List */}
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 24, paddingTop: 16 }}>
           <XStack ai="center" jc="space-between" mb={12}>
-            <H4 color="#222" fontWeight="700">Today’s Meals</H4>
+            <H4 color="#222" fontWeight="700" letterSpacing={0.5}>Today’s Meals</H4>
             <Button
               icon={Camera}
               size="$4"
@@ -114,6 +128,12 @@ export default function HomeScreen() {
               elevation={2}
               pressStyle={{ bg: "#00b894" }}
               onPress={() => {}}
+              style={{
+                shadowColor: "#34c759",
+                shadowOpacity: 0.18,
+                shadowRadius: 8,
+                shadowOffset: { width: 0, height: 2 },
+              }}
             >
               Snap Meal
             </Button>
@@ -125,19 +145,48 @@ export default function HomeScreen() {
             </YStack>
           ) : (
             meals.map((meal) => (
-              <Card key={meal.id} elevate size="$4" mb={18} bg="white" borderRadius={20} overflow="hidden" shadowColor="#34c759" shadowOpacity={0.08}>
+              <Card
+                key={meal.id}
+                elevate
+                size="$4"
+                mb={18}
+                bg="white"
+                borderRadius={20}
+                overflow="hidden"
+                shadowColor="#34c759"
+                shadowOpacity={0.10}
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#e6f4ea",
+                  shadowColor: "#34c759",
+                  shadowOpacity: 0.10,
+                  shadowRadius: 8,
+                  shadowOffset: { width: 0, height: 2 },
+                }}
+              >
                 <XStack>
                   <Image
                     source={{ uri: meal.photo }}
                     width={80}
                     height={80}
                     borderRadius={16}
-                    style={{ margin: 12, backgroundColor: "#e6f4ea" }}
+                    style={{
+                      margin: 12,
+                      backgroundColor: "#e6f4ea",
+                      borderWidth: 1,
+                      borderColor: "#d0f5e6",
+                    }}
                   />
                   <YStack f={1} jc="center" px={8} py={12}>
-                    <SizableText fontWeight="700" fontSize={18} color="#222">{meal.name}</SizableText>
-                    <Text color="#34c759" fontWeight="700" fontSize={16} mt={2}>{meal.calories} kcal</Text>
-                    <Text color="$gray10" fontSize={13} mt={2}>{meal.note}</Text>
+                    <SizableText fontWeight="700" fontSize={18} color="#222" mb={2}>
+                      {meal.name}
+                    </SizableText>
+                    <Text color="#34c759" fontWeight="700" fontSize={16} mt={2}>
+                      {meal.calories} kcal
+                    </Text>
+                    <Text color="$gray10" fontSize={13} mt={2}>
+                      {meal.note}
+                    </Text>
                   </YStack>
                 </XStack>
               </Card>
