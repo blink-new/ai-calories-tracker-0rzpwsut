@@ -1,8 +1,9 @@
 
 import { useState } from "react";
-import { YStack, XStack, Text, Button, Image, ScrollView, Card, Separator, Theme, H2, H4, Paragraph, SizableText, View } from "tamagui";
+import { YStack, XStack, Text, Button, Image, ScrollView, Card, Theme, H2, H4, SizableText, View } from "tamagui";
 import { LinearGradient } from "expo-linear-gradient";
-import { Circle, Camera } from "@tamagui/lucide-icons";
+import { Camera } from "@tamagui/lucide-icons";
+import Svg, { Circle as SvgCircle } from "react-native-svg";
 
 const DAILY_GOAL = 2000;
 const DUMMY_MEALS = [
@@ -23,7 +24,6 @@ const DUMMY_MEALS = [
 ];
 
 function CircularProgress({ value, max, size = 140, stroke = 14, color = "#34c759", bg = "#e6f4ea" }) {
-  // value: current intake, max: goal
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = Math.min(value / max, 1);
@@ -31,8 +31,8 @@ function CircularProgress({ value, max, size = 140, stroke = 14, color = "#34c75
 
   return (
     <View style={{ width: size, height: size, justifyContent: "center", alignItems: "center" }}>
-      <svg width={size} height={size}>
-        <circle
+      <Svg width={size} height={size}>
+        <SvgCircle
           cx={size / 2}
           cy={size / 2}
           r={radius}
@@ -40,7 +40,7 @@ function CircularProgress({ value, max, size = 140, stroke = 14, color = "#34c75
           strokeWidth={stroke}
           fill="none"
         />
-        <circle
+        <SvgCircle
           cx={size / 2}
           cy={size / 2}
           r={radius}
@@ -50,9 +50,8 @@ function CircularProgress({ value, max, size = 140, stroke = 14, color = "#34c75
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
-          style={{ transition: "stroke-dashoffset 0.5s" }}
         />
-      </svg>
+      </Svg>
       <YStack position="absolute" alignItems="center" justifyContent="center">
         <Text fontWeight="700" fontSize={32} color={color}>
           {value}

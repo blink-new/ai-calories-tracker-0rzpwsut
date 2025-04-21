@@ -32,7 +32,8 @@
     "react-native-web": "^0.19.13",
     "tamagui": "latest",
     "expo-linear-gradient": "latest",
-    "@tamagui/lucide-icons": "latest"
+    "@tamagui/lucide-icons": "latest",
+    "react-native-svg": "latest"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
